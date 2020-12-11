@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>matrix</title>
+  <style type="text/css">
+    body {
+      margin: 0;
+      overflow-y: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    let c = document.getElementById('canvas');
+    let ctx = canvas.getContext('2d');
+    let width = document.documentElement.clientWidth;
+    let height = document.documentElement.clientHeight + 3;
+    c.setAttribute('width', width);
+    c.setAttribute('height', height);
+
+    let gap = 20;
+    let rows = Math.floor(height / gap);
+    let columns = Math.floor(width / gap);
+    let array = new Array(columns);
+    for (let i = 0; i < columns; i++) {
+      array[i] = Math.floor(Math.random() * rows);
+    }
+    setInterval(() => {
+      paint();
+    }, 100);
+
+    function getRandomChar() {
+      // 33(!)-126(~)
+      return String.fromCharCode(Math.floor(Math.random() * 94) + 33);
+    }
+
+    function paint() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, width, height);
+      let currentColumn = 0;
+      for (let x = 0; x < width; x += gap) {
+        let endPos = array[currentColumn];
+        ctx.strokeStyle = '#00ffff';
+        ctx.strokeText(getRandomChar(), x, endPos * gap);
+        let g = 0;
+        for (let i = endPos - 15; i < endPos; i++) {
+          g += 20;
+          if (g > 255) {
+            g = 255;
+          }
+          ctx.strokeStyle = `#00${g.toString(16)}00`;
+          ctx.strokeText(getRandomChar(), x, i * gap);
+        }
+        array[currentColumn] += Math.floor(Math.random() * 5);
+        if (array[currentColumn] * gap > height) {
+          array[currentColumn] = Math.floor(Math.random() * rows);
+        }
+        currentColumn++;
+      }
+    }
+  </script>
+</body>
+
+</html>
